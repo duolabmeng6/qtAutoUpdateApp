@@ -42,11 +42,12 @@ jobs:
           python-version: '3.9'
           architecture: "x64"
           cache: 'pip'
+      - name: Installation dependency
       - run: |
           pip install pyinstaller
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         # 使用运行器的终端运行一组命令
-      - name: Build
+      - name: Build application
         run: |
           rm -rf build
           rm -rf dist
