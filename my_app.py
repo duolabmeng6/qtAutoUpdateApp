@@ -110,6 +110,16 @@ class Main(QMainWindow):
         self.检查更新线程.start()
 
 
-app = QApplication([])
-win = Main()
-sys.exit(app.exec())
+if __name__ == '__main__':
+    # 获取命令行参数
+    传入参数 = sys.argv
+    # print("传入参数", 传入参数)
+    if len(传入参数) == 2:
+        参数1 = 传入参数[1]
+        if 参数1 == "test":
+            print("app run success")
+            exit(0)
+
+    app = QApplication(sys.argv)
+    win = Main()
+    sys.exit(app.exec())

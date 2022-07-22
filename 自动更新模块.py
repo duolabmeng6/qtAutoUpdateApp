@@ -93,7 +93,9 @@ class 下载文件线程类(QThread):
         if 更新状态:
             QMessageBox.information(self.窗口, "提示", "更新成功")
             self.窗口.close()
-            os.system("open -n -a " + app路径)
+            运行命令 = "open -n -a " + app路径
+            QMessageBox.information(self.窗口, "提示", 运行命令)
+            os.system(运行命令)
         else:
             QMessageBox.information(self.窗口, "提示", "更新失败")
 

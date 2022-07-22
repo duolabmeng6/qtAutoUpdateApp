@@ -58,6 +58,17 @@ jobs:
           # 将版本号写入 version.py 文件
           echo "version = '$version'" > version.py
           pyinstaller my_app.spec
+      - name: Run App Test # 运行程序检查是否返回 app run success
+        run: |
+          # 运行 ./dist/my_app.app/Contents/MacOS/my_app 检查返回值
+            ./dist/my_app.app/Contents/MacOS/my_app
+            # 检查返回值 app run success
+            if [ $? -eq 0 ]; then
+              echo "app run success"
+            else
+              echo "app run failed"
+              exit 1
+            fi
       - name: Create Zip Package # 创建压缩包
         run: |
           cd ./dist
