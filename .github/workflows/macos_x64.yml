@@ -36,16 +36,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Install
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
           architecture: "x64"
           cache: 'pip'
-      - name: Installation dependency
-        run: |
-          pip install pyinstaller
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - run: |
+          pip install -r requirements.txt
       - name: Build application
         run: |
           rm -rf build
