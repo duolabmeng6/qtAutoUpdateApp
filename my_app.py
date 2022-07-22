@@ -19,7 +19,7 @@ class Main(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.resize(400, 400)
+        self.resize(400, 600)
         self.setWindowTitle("自动更新测试组件学习")
         self.show()
         self.版本号 = version.version
@@ -36,8 +36,15 @@ class Main(QMainWindow):
         self.编辑框 = QTextEdit(self)
         self.编辑框.move(0, 200)
         self.编辑框.resize(400, 200)
-        self.编辑框.setText('编辑框')
+        self.编辑框.setText('日志')
         self.编辑框.show()
+
+        self.编辑框2 = QTextEdit(self)
+        self.编辑框2.move(0, 400)
+        self.编辑框2.resize(400, 200)
+        self.编辑框2.setText('显示更新信息')
+        self.编辑框2.show()
+
         # 创建进度条
         self.进度条 = QProgressBar(self)
         self.进度条.move(0, 0)
@@ -68,6 +75,7 @@ class Main(QMainWindow):
             # print("下载地址列表", 数据['下载地址列表'])
             print("mac下载地址", 数据['mac下载地址'])
             print("windows下载地址", 数据['win下载地址'])
+            self.编辑框2.setHtml(数据['更新内容'])
 
         self.检查更新线程 = 检查更新线程(self, 回调函数)
         self.检查更新线程.start()
