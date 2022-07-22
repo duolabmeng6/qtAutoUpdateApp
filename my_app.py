@@ -8,7 +8,7 @@ from PySide6.QtWidgets import *
 from 压缩包文件处理 import *
 from 文件下载模块 import *
 from 自动更新模块 import *
-
+import version
 
 class Main(QMainWindow):
     def __init__(self):
@@ -24,7 +24,8 @@ class Main(QMainWindow):
         self.按钮.clicked.connect(self.按钮点击)
         self.按钮.move(100, 100)
         self.按钮.resize(160, 100)
-        self.按钮.setText('测试更新 当前版本 1.0')
+
+        self.按钮.setText(f'测试更新 当前版本 {version.version}')
         self.按钮.show()
         # 编辑一个纯文本框
         self.编辑框 = QTextEdit(self)

@@ -53,6 +53,10 @@ jobs:
       run: |
         rm -rf build
         rm -rf dist
+        # 获取当前的版本号
+        version=$(git describe --tags --always)
+        # 将版本号写入 version.py 文件
+        echo "version = '$version'" > version.py
         pyinstaller my_app.spec
     - name: Create Zip Package # 创建压缩包
       run: |
