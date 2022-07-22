@@ -1,10 +1,8 @@
 import json
-import os
-import sys
 
-from PySide6 import QtCore
-from PySide6.QtCore import QThread
-from PySide6.QtWidgets import QMessageBox
+from PySide6 import *
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
 
 from 压缩包文件处理 import zip解压2
 from 文件下载模块 import 下载文件
