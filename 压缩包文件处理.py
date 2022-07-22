@@ -1,4 +1,5 @@
 import os
+import shutil
 import stat
 import zipfile
 
@@ -57,7 +58,7 @@ def zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[]):
             info.filename = 文件名.encode('cp437').decode('utf-8')
         except:
             pass
-        # print("解压", 新文件名)
+        # print("解压", 文件名)
         # continue
         目标文件路径 = os.path.join(解压目录, info.filename)
         # 解压
@@ -70,6 +71,13 @@ def zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[]):
             # ic(目标文件路径, 软连接位置)
             os.symlink(软连接位置, 目标文件路径)
         else:
+            # 删除文件 重新解压
+            # print("解压", 文件名)
+            if os.path.exists(目标文件路径):
+                # 检查是否为文件
+                if os.path.isfile(目标文件路径):
+                    os.remove(目标文件路径)
+
             file.extract(info, path=解压目录)
             # print("权限", stat.filemode(权限))
             # 文件是否存在
@@ -101,3 +109,12 @@ def zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[]):
 # 压缩包的路径 = "/Users/chensuilong/Desktop/pythonproject/autotest/dist/test3.zip"
 # 解压目录 = r"/Users/chensuilong/Desktop/pythonproject/autotest/testzip/QtEsayDesigner.app"
 # zip压缩2(压缩包的路径, 解压目录)
+
+
+if __name__ == '__main__':
+
+    压缩包的路径 = "/Users/chensuilong/Downloads/my_app.app.zip"
+    解压目录 = r"/Users/chensuilong/Desktop/pythonproject/autotest/dist/"
+    zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[
+        "my_app.app/Contents/",
+    ])

@@ -37,7 +37,7 @@ def 更新自己MacOS应用(资源压缩包, 应用名称="my_app.app"):
         print(f"资源压缩包 {资源压缩包} app目录父目录{app目录父目录} MacOs应用路径{MacOs应用路径}")
         if MacOs应用路径 != "":
             zip解压2(资源压缩包, app目录父目录, [应用名称 + '/Contents/'])
-            MacOs应用路径 = os.path.join(app目录父目录 + 应用名称)
+            MacOs应用路径 = os.path.join(app目录父目录, 应用名称)
             return True, MacOs应用路径
     else:
         print("非MacOS编译环境")
@@ -46,7 +46,6 @@ def 更新自己MacOS应用(资源压缩包, 应用名称="my_app.app"):
 
 class 下载文件线程类(QThread):
     刷新界面事件 = QtCore.Signal(int, str)  # 进度 提示文本
-    任务完成事件 = QtCore.Signal(bool, str)  # 下载结果 保存路径
 
     def __init__(self, *args, **kwargs):
         super(下载文件线程类, self).__init__()
@@ -58,7 +57,11 @@ class 下载文件线程类(QThread):
         self.应用名称 = kwargs.get('应用名称')
 
         self.刷新界面事件.connect(self.刷新界面)
-        self.任务完成事件.connect(self.任务完成)
+
+        # 绑定线程开始事件
+        self.started.connect(self.ui_开始)
+        # 绑定线程结束事件
+        self.finished.connect(self.ui_结束)
 
     def run(self):
         if self.下载地址 == None:
@@ -71,33 +74,41 @@ class 下载文件线程类(QThread):
 
         try:
             下载结果 = 下载文件(self.下载地址, self.保存地址, 进度)
-            self.任务完成事件.emit(True, self.保存地址)
+            self.下载结果 = True
         except:
-            self.任务完成事件.emit(False, self.保存地址)
+            self.下载结果 = False
+
+    def ui_开始(self):
+        self.编辑框.setText(f'查询最新版本')
+
+    def ui_结束(self):
+        print("下载结果", self.下载结果)
+        print("保存地址", self.保存地址)
+        self.编辑框.setText(f"下载完成 {self.保存地址}")
+        # 取绝对路径
+        更新状态, app路径 = 更新自己MacOS应用(
+            资源压缩包=self.保存地址,
+            应用名称=self.应用名称
+        )
+        if 更新状态:
+            QMessageBox.information(self.窗口, "提示", "更新成功")
+            self.窗口.close()
+            # QApplication.quit()
+
+            # 停止应用的运行
+            # 取.前面的字符
+            应用名称 = self.应用名称[:self.应用名称.rfind('.')]
+            运行命令 = f"killall {应用名称} && open -n -a {app路径}"
+            QMessageBox.information(self.窗口, "提示", 运行命令)
+            os.system(运行命令)
+        else:
+            QMessageBox.information(self.窗口, "提示", "更新失败")
 
     def 刷新界面(self, 进度, 信息):
         if self.编辑框:
             self.编辑框.setText(str(信息))
         if self.进度条:
             self.进度条.setValue(int(进度))
-
-    def 任务完成(self, 下载结果, 保存地址):
-        print("下载结果", 下载结果)
-        print("保存地址", 保存地址)
-        self.编辑框.setText(f"下载完成 {保存地址}")
-        # 取绝对路径
-        更新状态, app路径 = 更新自己MacOS应用(
-            资源压缩包=保存地址,
-            应用名称=self.应用名称
-        )
-        if 更新状态:
-            QMessageBox.information(self.窗口, "提示", "更新成功")
-            self.窗口.close()
-            运行命令 = "open -n -a " + app路径
-            QMessageBox.information(self.窗口, "提示", 运行命令)
-            os.system(运行命令)
-        else:
-            QMessageBox.information(self.窗口, "提示", "更新失败")
 
 
 class 检查更新线程(QThread):
