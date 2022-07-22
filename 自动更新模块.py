@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -7,6 +8,7 @@ from PySide6.QtWidgets import QMessageBox
 
 from 压缩包文件处理 import zip解压2
 from 文件下载模块 import 下载文件
+from 自动更新读取版本模块 import 获取最新版本号和下载地址
 
 
 def 取自身MacOs应用路径():
@@ -53,6 +55,7 @@ class 下载文件线程类(QThread):
         self.保存地址 = kwargs.get('保存地址')
         self.编辑框 = kwargs.get('编辑框')
         self.进度条 = kwargs.get('进度条')
+        self.应用名称 = kwargs.get('应用名称')
 
         self.刷新界面事件.connect(self.刷新界面)
         self.任务完成事件.connect(self.任务完成)
@@ -85,7 +88,7 @@ class 下载文件线程类(QThread):
         # 取绝对路径
         更新状态, app路径 = 更新自己MacOS应用(
             资源压缩包=保存地址,
-            应用名称="QtEsayDesigner.app"
+            应用名称=self.应用名称
         )
         if 更新状态:
             QMessageBox.information(self.窗口, "提示", "更新成功")
@@ -93,3 +96,26 @@ class 下载文件线程类(QThread):
             os.system("open -n -a " + app路径)
         else:
             QMessageBox.information(self.窗口, "提示", "更新失败")
+
+
+class 检查更新线程(QThread):
+    def __init__(self, 窗口, 回调函数):
+        super(检查更新线程, self).__init__()
+        self.编辑框 = 窗口.编辑框
+        # 绑定线程开始事件
+        self.started.connect(self.ui_开始)
+        # 绑定线程结束事件
+        self.finished.connect(self.ui_结束)
+        self.回调函数 = 回调函数
+
+    def run(self):
+        data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
+        self.数据 = data
+
+    def ui_开始(self):
+        self.编辑框.setText(f'查询最新版本')
+
+    def ui_结束(self):
+        data = json.dumps(self.数据, indent=4, ensure_ascii=False)
+        self.编辑框.setText(data)
+        self.回调函数(self.数据)

@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import threading
@@ -9,6 +10,8 @@ from 压缩包文件处理 import *
 from 文件下载模块 import *
 from 自动更新模块 import *
 import version
+from 自动更新读取版本模块 import 获取最新版本号和下载地址
+
 
 class Main(QMainWindow):
     def __init__(self):
@@ -19,13 +22,15 @@ class Main(QMainWindow):
         self.resize(400, 400)
         self.setWindowTitle("自动更新测试组件学习")
         self.show()
+        self.版本号 = version.version
+
         # 创建按钮 测试更新
         self.按钮 = QPushButton(self)
         self.按钮.clicked.connect(self.按钮点击)
         self.按钮.move(100, 100)
         self.按钮.resize(160, 100)
 
-        self.按钮.setText(f'测试更新 当前版本 {version.version}')
+        self.按钮.setText(f'检查更新 当前版本 {version.version}')
         self.按钮.show()
         # 编辑一个纯文本框
         self.编辑框 = QTextEdit(self)
@@ -44,33 +49,68 @@ class Main(QMainWindow):
         self.进度条.setValue(0)
         # self.进度条.setFormat("％p％")
         self.进度条.show()
+        # 创建按钮 查询最新版
+        self.按钮2 = QPushButton(self)
+        self.按钮2.clicked.connect(self.按钮2点击)
+        self.按钮2.move(100, 0)
+        self.按钮2.resize(160, 100)
+        self.按钮2.setText(f'查询最新版')
+        self.按钮2.show()
+
+        # 启动qt的线程
+
+    def 按钮2点击(self):
+        print('查询最新版本')
+
+        def 回调函数(数据):
+            # print("数据", 数据)
+            print("版本号", 数据['版本号'])
+            # print("下载地址列表", 数据['下载地址列表'])
+            print("mac下载地址", 数据['mac下载地址'])
+            print("windows下载地址", 数据['win下载地址'])
+
+        self.检查更新线程 = 检查更新线程(self, 回调函数)
+        self.检查更新线程.start()
 
     def closeEvent(self, event):
         event.accept()
 
     def 按钮点击(self):
-        压缩包路径 = os.path.abspath("./dist/QtEsayDesigner_MacOS.zip")
-        print(f"压缩包路径{压缩包路径}")
-        self.下载文件线程 = 下载文件线程类(
-            下载地址="https://github.com/duolabmeng6/QtEsayDesigner/releases/download/0.0.32/QtEsayDesigner_MacOS.zip",
-            保存地址=压缩包路径,
-            窗口=self,
-            编辑框=self.编辑框,
-            进度条=self.进度条
-        )
-        self.下载文件线程.start()
+        print('查询最新版本')
+        # 获取系统下载文件夹路径
+        应用名称 = "my_app.app"
+        下载文件夹路径 = os.path.expanduser('~/Downloads')
+        压缩包路径 = os.path.abspath(下载文件夹路径 + f"/{应用名称}.zip")
+        print("压缩包路径", 压缩包路径)
 
-        # return ""
-        # 更新状态, app路径 = 更新自己MacOS应用(
-        #     "/Users/chensuilong/Desktop/pythonproject/autotest/dist/my_app.2.0.zip",
-        #     "my_app.app"
-        # )
-        # if 更新状态:
-        #     QMessageBox.information(self, "提示", "更新成功")
-        #     self.close()
-        #     os.system("open -n -a " + app路径)
-        # else:
-        #     QMessageBox.information(self, "提示", "更新失败")
+        def 下载并更新2(下载地址):
+            print(f"压缩包路径{压缩包路径}")
+            self.下载文件线程 = 下载文件线程类(
+                下载地址=下载地址,
+                保存地址=压缩包路径,
+                窗口=self,
+                编辑框=self.编辑框,
+                进度条=self.进度条,
+                应用名称=应用名称
+            )
+            self.下载文件线程.start()
+
+        def 检查更新回调1(数据):
+            # print("数据", 数据)
+            print("版本号", 数据['版本号'])
+            print("mac下载地址", 数据['mac下载地址'])
+            print("windows下载地址", 数据['win下载地址'])
+
+            if self.版本号 == 数据['版本号']:
+                return
+                # 消息框询问是否更新
+
+            确认 = QMessageBox.question(self, "更新提示", f"发现新版本{数据['版本号']}，是否更新？")
+            if 确认 == QMessageBox.Yes:
+                下载并更新2(数据['mac下载地址'])
+
+        self.检查更新线程 = 检查更新线程(self, 检查更新回调1)
+        self.检查更新线程.start()
 
 
 app = QApplication([])
