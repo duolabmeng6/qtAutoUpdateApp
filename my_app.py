@@ -10,7 +10,7 @@ class Main(QMainWindow):
 
     def init_ui(self):
         self.resize(400, 600)
-        self.setWindowTitle("自动更新测试组件学习")
+        self.setWindowTitle("自动更新的程序演示")
         self.show()
         self.版本号 = version.version
 
