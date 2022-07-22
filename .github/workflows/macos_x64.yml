@@ -5,7 +5,7 @@ name: 构建应用程序MacOS_x64
 on:
   #   # 当 `push` 或 `pull request` 事件发生时就触发工作流的执行，这里仅仅针对 `master` 分支
   push:
-#    branches: [ main ]
+    #    branches: [ main ]
     tags:
       - '*'
   #   pull_request:
@@ -43,10 +43,9 @@ jobs:
           architecture: "x64"
           cache: 'pip'
       - name: Installation dependency
-      - run: |
+        run: |
           pip install pyinstaller
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # 使用运行器的终端运行一组命令
       - name: Build application
         run: |
           rm -rf build
