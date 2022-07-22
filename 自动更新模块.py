@@ -93,7 +93,7 @@ class 下载文件线程类(QThread):
         if 更新状态:
             QMessageBox.information(self.窗口, "提示", "更新成功")
             self.窗口.close()
-            # QApplication.quit()
+            QApplication.quit()
 
             # 停止应用的运行
             # 取.前面的字符
