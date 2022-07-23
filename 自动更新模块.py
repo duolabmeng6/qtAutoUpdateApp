@@ -1,5 +1,7 @@
 import json
 import os
+import platform
+import shutil
 import sys
 
 from PySide6 import QtCore
@@ -10,6 +12,25 @@ from 压缩包文件处理 import zip解压2
 from 文件下载模块 import 下载文件
 from 自动更新读取版本模块 import 获取最新版本号和下载地址
 
+def 系统_是否为window系统():
+    return platform.system().lower() == 'windows'
+
+
+def 系统_是否为linux系统():
+    return platform.system().lower() == 'linux'
+
+
+def 系统_是否为mac系统():
+    return platform.system().lower() == 'darwin'
+
+
+def 取自身路径Window():
+    # 如果不处于编译状态反馈空
+    try:
+        编译后路径 = sys._MEIPASS
+        return sys.argv[0]
+    except Exception:
+        return ""
 
 def 取自身MacOs应用路径():
     # 如果不处于编译状态反馈空
@@ -44,8 +65,26 @@ def 更新自己MacOS应用(资源压缩包, 应用名称="my_app.app"):
         return False, ""
 
 
+
+def 更新自己Window应用(exe资源文件路径):
+    # window更新方法
+    # exe资源文件路径 = r"C:\Users\csuil\.virtualenvs\QtEsayDesigner\Scripts\dist\my_app1.0.exe"
+    自身路径Window = 取自身路径Window()
+    if 自身路径Window == "":
+        print("非Window编译环境")
+        return False, ""
+    文件名 = os.path.basename(自身路径Window)
+    运行目录 = os.path.dirname(自身路径Window)
+    os.rename(自身路径Window, 自身路径Window + ".old.bak")
+    shutil.copy(exe资源文件路径, 自身路径Window)
+    # 结束自身运行 然后重启自己
+    os.execv(自身路径Window, sys.argv)
+    os.system(f"taskkill /f /im {文件名}")
+    return True, ""
+
+
 class 下载文件线程类(QThread):
-    刷新界面事件 = QtCore.Signal(int, str)  # 进度 提示文本
+    刷新进度条 = QtCore.Signal(int, str)  # 进度 提示文本
 
     def __init__(self, *args, **kwargs):
         super(下载文件线程类, self).__init__()
@@ -56,7 +95,7 @@ class 下载文件线程类(QThread):
         self.进度条 = kwargs.get('进度条')
         self.应用名称 = kwargs.get('应用名称')
 
-        self.刷新界面事件.connect(self.刷新界面)
+        self.刷新进度条.connect(self.刷新界面)
 
         # 绑定线程开始事件
         self.started.connect(self.ui_开始)
@@ -70,7 +109,7 @@ class 下载文件线程类(QThread):
 
         def 进度(进度百分比, 已下载大小, 文件大小, 下载速率, 剩余时间):
             信息 = f"进度 {进度百分比}% 已下载 {已下载大小}MB 文件大小 {文件大小}MB 下载速率 {下载速率}MB 剩余时间 {剩余时间}秒"
-            self.刷新界面事件.emit(进度百分比, 信息)
+            self.刷新进度条.emit(进度百分比, 信息)
 
         try:
             下载结果 = 下载文件(self.下载地址, self.保存地址, 进度)
@@ -86,23 +125,24 @@ class 下载文件线程类(QThread):
         print("保存地址", self.保存地址)
         self.编辑框.setText(f"下载完成 {self.保存地址}")
         # 取绝对路径
-        更新状态, app路径 = 更新自己MacOS应用(
-            资源压缩包=self.保存地址,
-            应用名称=self.应用名称
-        )
-        if 更新状态:
-            QMessageBox.information(self.窗口, "提示", "更新成功")
-            self.窗口.close()
-            QApplication.quit()
+        if 系统_是否为mac系统():
+            更新状态, app路径 = 更新自己MacOS应用(
+                资源压缩包=self.保存地址,
+                应用名称=self.应用名称
+            )
+            if 更新状态:
+                QMessageBox.information(self.窗口, "提示", "更新成功")
+                self.窗口.close()
+                QApplication.quit()
+                应用名称 = self.应用名称[:self.应用名称.rfind('.')]
+                运行命令 = f"killall {应用名称} && open -n -a {app路径}"
+                os.system(运行命令)
+            else:
+                QMessageBox.information(self.窗口, "提示", "更新失败")
 
-            # 停止应用的运行
-            # 取.前面的字符
-            应用名称 = self.应用名称[:self.应用名称.rfind('.')]
-            运行命令 = f"killall {应用名称} && open -n -a {app路径}"
-            QMessageBox.information(self.窗口, "提示", 运行命令)
-            os.system(运行命令)
-        else:
-            QMessageBox.information(self.窗口, "提示", "更新失败")
+        if 系统_是否为window系统():
+            exe资源文件路径 = self.保存地址
+            更新自己Window应用(exe资源文件路径)
 
     def 刷新界面(self, 进度, 信息):
         if self.编辑框:

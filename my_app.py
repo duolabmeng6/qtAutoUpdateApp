@@ -1,3 +1,5 @@
+import shutil
+
 from PySide6.QtWidgets import *
 from 自动更新模块 import *
 import version
@@ -89,25 +91,32 @@ class Main(QMainWindow):
         print("版本号", 数据['版本号'])
         print("mac下载地址", 数据['mac下载地址'])
         print("windows下载地址", 数据['win下载地址'])
-
         if self.版本号 == 数据['版本号']:
             return
             # 消息框询问是否更新
-
         确认 = QMessageBox.question(self, "更新提示", f"发现新版本{数据['版本号']}，是否更新？")
         if 确认 == QMessageBox.Yes:
-            self.下载并更新2(数据['mac下载地址'], self.压缩包路径, self.应用名称)
+            if 系统_是否为mac系统():
+                self.下载并更新2(数据['mac下载地址'], self.压缩包路径, self.应用名称)
+            if 系统_是否为window系统():
+                if 数据.get("windows下载地址","") == "":
+                    # 提示没有找到windows下载地址
+                    QMessageBox.warning(self, "提示", "没有找到windows下载地址")
+                    return
+                self.下载并更新2(数据['windows下载地址'], self.压缩包路径, self.应用名称)
 
     def 按钮点击(self):
+        # EXE文件路径 = r"C:\Users\csuil\.virtualenvs\QtEsayDesigner\Scripts\dist\my_app1.0.exe"
+        # 更新自己Window应用(EXE文件路径)
         print('查询最新版本')
         # 获取系统下载文件夹路径
         self.应用名称 = "my_app.app"
         下载文件夹路径 = os.path.expanduser('~/Downloads')
         self.压缩包路径 = os.path.abspath(下载文件夹路径 + f"/{self.应用名称}.zip")
         print("self.压缩包路径", self.压缩包路径)
-
         self.检查更新线程 = 检查更新线程(self, self.检查更新回调1)
         self.检查更新线程.start()
+
 
 
 if __name__ == '__main__':
