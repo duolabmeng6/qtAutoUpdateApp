@@ -5,9 +5,11 @@ from PySide6.QtWidgets import QDialog
 from 自动更新模块 import 下载文件线程类, 系统_是否为window系统, 系统_是否为mac系统, 更新自己Window应用, 检查更新线程, 更新自己MacOS应用, ui_winUpdate
 
 import 自动更新模块.update_image_rc
+
+
 class 窗口_更新软件(QDialog):
 
-    def __init__(self,Github项目名称="duolabmeng6/qtAutoUpdateApp",应用名称="my_app.app",当前版本号="1.0"):
+    def __init__(self, Github项目名称="duolabmeng6/qtAutoUpdateApp", 应用名称="my_app.app", 当前版本号="1.0"):
         super(窗口_更新软件, self).__init__()
         self.ui = ui_winUpdate.Ui_Form()
         self.ui.setupUi(self)
@@ -39,7 +41,7 @@ class 窗口_更新软件(QDialog):
             self.压缩包路径 = os.path.abspath(self.下载文件夹路径 + f"/{self.应用名称}.exe")
 
         print('查询最新版本')
-        self.检查更新线程 = 检查更新线程(Github项目名称,self.检查更新回到回调函数)
+        self.检查更新线程 = 检查更新线程(Github项目名称, self.检查更新回到回调函数)
         self.检查更新线程.start()
 
     def 检查更新回到回调函数(self, 数据):
@@ -82,7 +84,8 @@ class 窗口_更新软件(QDialog):
                 窗口=self,
                 编辑框=self.ui.lineEdit_jdxx,
                 进度条=self.ui.progressBar,
-                应用名称=self.应用名称
+                应用名称=self.应用名称,
+                回调函数=self.下载完成,
             )
             self.下载文件线程.start()
 
@@ -115,4 +118,3 @@ class 窗口_更新软件(QDialog):
         if 系统_是否为window系统():
             exe资源文件路径 = 保存地址
             更新自己Window应用(exe资源文件路径)
-

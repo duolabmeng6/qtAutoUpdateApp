@@ -132,7 +132,6 @@ class 下载文件线程类(QThread):
         print("下载结果", self.下载结果)
         print("保存地址", self.保存地址)
         self.回调函数(self.下载结果, self.保存地址)
-
         self.编辑框.setText(f"下载完成 {self.保存地址}")
 
     def 刷新界面(self, 进度, 信息):
