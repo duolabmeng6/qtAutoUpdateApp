@@ -45,7 +45,7 @@ jobs:
           version=$(git describe --tags --always)
           # 将版本号写入 version.py 文件
           echo "version = '$version'" > version.py
-          pyinstaller my_app.spec
+          pyinstaller my_app_macos.spec
       - name: Run App Test # 运行程序检查是否返回 app run success
         run: |
           # 运行 ./dist/my_app.app/Contents/MacOS/my_app 检查返回文本 是否有 app run success

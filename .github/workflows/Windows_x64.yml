@@ -37,6 +37,10 @@ jobs:
           pip install -r requirements.txt
     - name: Build
       run: |
+        # 获取当前的版本号
+        version=$(git describe --tags --always)
+        # window 系统 将版本号写入 version.py 文件
+        echo "version = '$version'" > version.py
         pyinstaller --onefile --windowed --icon "QtEsayDesigner.icns" "my_app.py"
     - name: Upload Artifact # 上传构建产物，这里我们的源码目录是根目录，而实际运行的代码是构建后的 dist 目录
       uses: actions/upload-artifact@v3
