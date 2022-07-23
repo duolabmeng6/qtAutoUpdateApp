@@ -90,7 +90,7 @@ class Main(QMainWindow):
         # print("数据", 数据)
         print("版本号", 数据['版本号'])
         print("mac下载地址", 数据['mac下载地址'])
-        print("windows下载地址", 数据['win下载地址'])
+        print("win下载地址", 数据['win下载地址'])
         if self.版本号 == 数据['版本号']:
             return
             # 消息框询问是否更新
@@ -99,11 +99,11 @@ class Main(QMainWindow):
             if 系统_是否为mac系统():
                 self.下载并更新2(数据['mac下载地址'], self.压缩包路径, self.应用名称)
             if 系统_是否为window系统():
-                if 数据.get("windows下载地址","") == "":
+                if 数据['win下载地址'] == "":
                     # 提示没有找到windows下载地址
                     QMessageBox.warning(self, "提示", "没有找到windows下载地址")
                     return
-                self.下载并更新2(数据['windows下载地址'], self.压缩包路径, self.应用名称)
+                self.下载并更新2(数据['win下载地址'], self.压缩包路径, self.应用名称)
 
     def 按钮点击(self):
         # EXE文件路径 = r"C:\Users\csuil\.virtualenvs\QtEsayDesigner\Scripts\dist\my_app1.0.exe"
@@ -112,6 +112,7 @@ class Main(QMainWindow):
         # 获取系统下载文件夹路径
         self.应用名称 = "my_app.app"
         下载文件夹路径 = os.path.expanduser('~/Downloads')
+        print("下载文件夹路径",下载文件夹路径)
         self.压缩包路径 = os.path.abspath(下载文件夹路径 + f"/{self.应用名称}.zip")
         print("self.压缩包路径", self.压缩包路径)
         self.检查更新线程 = 检查更新线程(self, self.检查更新回调1)

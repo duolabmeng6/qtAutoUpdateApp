@@ -37,6 +37,7 @@ jobs:
         pip install -r requirements.txt
     - name: Build
       run: |
+        python run.py
         pyinstaller --noconfirm --onefile --windowed "my_app.py"
     #- name: Create Zip Package # 创建压缩包
     #  run: |
