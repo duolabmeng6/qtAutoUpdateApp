@@ -26,9 +26,7 @@ jobs:
       matrix:
         os: [ macos-12 ]
 
-    # 执行作业所需的运行器 runner
     steps:
-      # 在 $GITHUB_WORKSPACE 下 checks-out 当前仓库，这样当前作业就可以访问该仓库
       - uses: actions/checkout@v3
         with:
           submodules: recursive
