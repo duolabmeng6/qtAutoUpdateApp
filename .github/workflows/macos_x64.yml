@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 #权限
-permissions: read-all|write-all
+permissions: write-all
 # 工作流由一个或多个作业( job )组成，这些作业可以顺序运行也可以并行运行
 jobs:
   # 当前的工作流仅包含一个作业，作业 id 是 "build"
