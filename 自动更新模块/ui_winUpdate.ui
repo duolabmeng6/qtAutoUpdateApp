@@ -20,9 +20,7 @@
       <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
-         <family>Arial</family>
-         <pointsize>12</pointsize>
-         <weight>75</weight>
+         <pointsize>16</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -35,8 +33,7 @@
       <widget class="QLabel" name="label_bbh">
        <property name="font">
         <font>
-         <family>Arial</family>
-         <pointsize>9</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -48,9 +45,7 @@
       <widget class="QLabel" name="label_3">
        <property name="font">
         <font>
-         <family>Arial</family>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
+         <pointsize>14</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -106,12 +101,30 @@
          <property name="text">
           <string>安装更新</string>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_ok">
          <property name="text">
           <string>确定</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>false</bool>
          </property>
         </widget>
        </item>

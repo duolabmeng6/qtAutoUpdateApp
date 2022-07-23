@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'winUpdateVfaTsU.ui'
+## Form generated from reading UI file 'ui_winUpdate.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.1
 ##
@@ -31,8 +31,7 @@ class Ui_Form(object):
         self.label_2 = QLabel(Form)
         self.label_2.setObjectName(u"label_2")
         font = QFont()
-        font.setFamilies([u"Arial"])
-        font.setPointSize(12)
+        font.setPointSize(16)
         font.setBold(True)
         self.label_2.setFont(font)
 
@@ -41,8 +40,7 @@ class Ui_Form(object):
         self.label_bbh = QLabel(Form)
         self.label_bbh.setObjectName(u"label_bbh")
         font1 = QFont()
-        font1.setFamilies([u"Arial"])
-        font1.setPointSize(9)
+        font1.setPointSize(12)
         self.label_bbh.setFont(font1)
 
         self.verticalLayout.addWidget(self.label_bbh)
@@ -50,8 +48,7 @@ class Ui_Form(object):
         self.label_3 = QLabel(Form)
         self.label_3.setObjectName(u"label_3")
         font2 = QFont()
-        font2.setFamilies([u"Arial"])
-        font2.setPointSize(10)
+        font2.setPointSize(14)
         font2.setBold(True)
         self.label_3.setFont(font2)
 
@@ -88,11 +85,15 @@ class Ui_Form(object):
 
         self.pushButton_azgx = QPushButton(Form)
         self.pushButton_azgx.setObjectName(u"pushButton_azgx")
+        self.pushButton_azgx.setCheckable(False)
+        self.pushButton_azgx.setAutoDefault(True)
+        self.pushButton_azgx.setFlat(False)
 
         self.horizontalLayout.addWidget(self.pushButton_azgx)
 
         self.pushButton_ok = QPushButton(Form)
         self.pushButton_ok.setObjectName(u"pushButton_ok")
+        self.pushButton_ok.setAutoDefault(False)
 
         self.horizontalLayout.addWidget(self.pushButton_ok)
 
@@ -104,6 +105,10 @@ class Ui_Form(object):
 
 
         self.retranslateUi(Form)
+
+        self.pushButton_azgx.setDefault(True)
+        self.pushButton_ok.setDefault(False)
+
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
