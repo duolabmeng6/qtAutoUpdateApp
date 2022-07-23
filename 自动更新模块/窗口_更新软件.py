@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QDialog
 
 from 自动更新模块 import 下载文件线程类, 系统_是否为window系统, 系统_是否为mac系统, 更新自己Window应用, 检查更新线程, 更新自己MacOS应用, ui_winUpdate
 
-
+import 自动更新模块.update_image_rc
 class 窗口_更新软件(QDialog):
 
     def __init__(self,Github项目名称="duolabmeng6/qtAutoUpdateApp",应用名称="my_app.app",当前版本号="1.0"):
