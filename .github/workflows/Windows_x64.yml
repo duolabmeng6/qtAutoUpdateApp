@@ -37,8 +37,8 @@ jobs:
         pip install -r requirements.txt
     - name: Build
       run: |
-        python run.py
-        pyinstaller --noconfirm --onefile --windowed --icon "QtEsayDesigner.ico" "my_app.py"
+        python run_output_version.py
+        pyinstaller --noconfirm --onefile --windowed --icon "app.ico" "my_app.py"
     #- name: Create Zip Package # 创建压缩包
     #  run: |
     #    zip -r ./dist/MacOS_ARM64.zip ./dist/app

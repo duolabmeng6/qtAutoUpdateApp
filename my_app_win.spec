@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['my_app.py'],
+    ['C:\\python\\qtAutoUpdateApp\\my_app.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -24,34 +24,21 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name='my_app',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='app.icns',
-)
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='my_app',
-)
-app = BUNDLE(
-    coll,
-    name='my_app.app',
-    icon='app.icns',
-    bundle_identifier=None,
 )

@@ -1,5 +1,4 @@
 import os
-import shutil
 import stat
 import zipfile
 
@@ -100,14 +99,14 @@ def zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[]):
 # zip压缩(压缩包的路径, 解压目录)
 
 #
-# 压缩包的路径 = "/Users/chensuilong/Desktop/pythonproject/autotest/QtEsayDesigner_MacOS.zip"
+# 压缩包的路径 = "/Users/chensuilong/Desktop/pythonproject/autotest/app_MacOS.zip"
 # 解压目录 = r"/Users/chensuilong/Desktop/pythonproject/autotest/testzip"
 # zip解压2(压缩包的路径, 解压目录, 允许解压路径前缀=[
-#     "QtEsayDesigner.app/Contents/",
+#     "app.app/Contents/",
 # ])
 
 # 压缩包的路径 = "/Users/chensuilong/Desktop/pythonproject/autotest/dist/test3.zip"
-# 解压目录 = r"/Users/chensuilong/Desktop/pythonproject/autotest/testzip/QtEsayDesigner.app"
+# 解压目录 = r"/Users/chensuilong/Desktop/pythonproject/autotest/testzip/app.app"
 # zip压缩2(压缩包的路径, 解压目录)
 
 

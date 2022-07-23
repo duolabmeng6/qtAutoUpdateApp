@@ -8,9 +8,10 @@ from PySide6 import QtCore
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 
-from 压缩包文件处理 import zip解压2
-from 文件下载模块 import 下载文件
-from 自动更新读取版本模块 import 获取最新版本号和下载地址
+from 自动更新模块.压缩包文件处理 import zip解压2
+from 自动更新模块.文件下载模块 import 下载文件
+from 自动更新模块.自动更新读取版本模块 import 获取最新版本号和下载地址
+
 
 def 系统_是否为window系统():
     return platform.system().lower() == 'windows'
@@ -31,6 +32,7 @@ def 取自身路径Window():
         return sys.argv[0]
     except Exception:
         return ""
+
 
 def 取自身MacOs应用路径():
     # 如果不处于编译状态反馈空
@@ -59,11 +61,14 @@ def 更新自己MacOS应用(资源压缩包, 应用名称="my_app.app"):
         if MacOs应用路径 != "":
             zip解压2(资源压缩包, app目录父目录, [应用名称 + '/Contents/'])
             MacOs应用路径 = os.path.join(app目录父目录, 应用名称)
+            QApplication.quit()
+            应用名称 = 应用名称[:应用名称.rfind('.')]
+            运行命令 = f"killall {应用名称} && open -n -a {MacOs应用路径}"
+            os.system(运行命令)
             return True, MacOs应用路径
     else:
         print("非MacOS编译环境")
         return False, ""
-
 
 
 def 更新自己Window应用(exe资源文件路径):
@@ -74,9 +79,11 @@ def 更新自己Window应用(exe资源文件路径):
         print("非Window编译环境")
         return False, ""
     文件名 = os.path.basename(自身路径Window)
-    运行目录 = os.path.dirname(自身路径Window)
     os.rename(自身路径Window, 自身路径Window + ".old.bak")
-    shutil.copy(exe资源文件路径, 自身路径Window)
+    shutil.move(exe资源文件路径, 自身路径Window)
+    # 删除文件 这步放到启动时检查删除就好
+    # os.remove(自身路径Window + ".old.bak") 这个运行中是无法删除的
+
     # 结束自身运行 然后重启自己
     os.execv(自身路径Window, sys.argv)
     os.system(f"taskkill /f /im {文件名}")
@@ -94,6 +101,7 @@ class 下载文件线程类(QThread):
         self.编辑框 = kwargs.get('编辑框')
         self.进度条 = kwargs.get('进度条')
         self.应用名称 = kwargs.get('应用名称')
+        self.回调函数 = kwargs.get('回调函数')
 
         self.刷新进度条.connect(self.刷新界面)
 
@@ -118,31 +126,14 @@ class 下载文件线程类(QThread):
             self.下载结果 = False
 
     def ui_开始(self):
-        self.编辑框.setText(f'查询最新版本')
+        self.编辑框.setText(f'开始下载')
 
     def ui_结束(self):
         print("下载结果", self.下载结果)
         print("保存地址", self.保存地址)
-        self.编辑框.setText(f"下载完成 {self.保存地址}")
-        # 取绝对路径
-        if 系统_是否为mac系统():
-            更新状态, app路径 = 更新自己MacOS应用(
-                资源压缩包=self.保存地址,
-                应用名称=self.应用名称
-            )
-            if 更新状态:
-                QMessageBox.information(self.窗口, "提示", "更新成功")
-                self.窗口.close()
-                QApplication.quit()
-                应用名称 = self.应用名称[:self.应用名称.rfind('.')]
-                运行命令 = f"killall {应用名称} && open -n -a {app路径}"
-                os.system(运行命令)
-            else:
-                QMessageBox.information(self.窗口, "提示", "更新失败")
+        self.回调函数(self.下载结果, self.保存地址)
 
-        if 系统_是否为window系统():
-            exe资源文件路径 = self.保存地址
-            更新自己Window应用(exe资源文件路径)
+        self.编辑框.setText(f"下载完成 {self.保存地址}")
 
     def 刷新界面(self, 进度, 信息):
         if self.编辑框:
@@ -152,23 +143,23 @@ class 下载文件线程类(QThread):
 
 
 class 检查更新线程(QThread):
-    def __init__(self, 窗口, 回调函数):
+    def __init__(self, Github项目名称="duolabmeng6/qtAutoUpdateApp", 回调函数=None):
         super(检查更新线程, self).__init__()
-        self.编辑框 = 窗口.编辑框
         # 绑定线程开始事件
         self.started.connect(self.ui_开始)
         # 绑定线程结束事件
         self.finished.connect(self.ui_结束)
+        self.Github项目名称 = Github项目名称
         self.回调函数 = 回调函数
 
     def run(self):
-        data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
+        data = 获取最新版本号和下载地址(self.Github项目名称)
         self.数据 = data
 
     def ui_开始(self):
-        self.编辑框.setText(f'查询最新版本')
+        print("开始检查更新")
 
     def ui_结束(self):
-        data = json.dumps(self.数据, indent=4, ensure_ascii=False)
-        self.编辑框.setText(data)
+        # data = json.dumps(self.数据, indent=4, ensure_ascii=False)
+        # print("检查更新结果", data)
         self.回调函数(self.数据)
