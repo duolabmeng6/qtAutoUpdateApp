@@ -52,6 +52,7 @@ jobs:
       with:
         allowUpdates: true
 #        tag: "latest"
+        bodyFile: ./版本描述.md
         artifacts: "dist/*.exe"
         token: ${{ secrets.GITHUB_TOKEN }}
 
