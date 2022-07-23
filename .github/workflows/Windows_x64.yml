@@ -38,7 +38,7 @@ jobs:
     - name: Build
       run: |
         python run.py
-        pyinstaller --noconfirm --onefile --windowed "my_app.py"
+        pyinstaller --noconfirm --onefile --windowed --icon "QtEsayDesigner.ico" "my_app.py"
     #- name: Create Zip Package # 创建压缩包
     #  run: |
     #    zip -r ./dist/MacOS_ARM64.zip ./dist/app
