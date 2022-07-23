@@ -14,6 +14,7 @@ class 窗口_更新软件(QDialog):
         self.ui = ui_winUpdate.Ui_Form()
         self.ui.setupUi(self)
         self.setWindowTitle('软件更新')
+        self.resize(620, 380)
 
         # 绑定按钮事件
         self.ui.pushButton_azgx.clicked.connect(self.安装更新)
@@ -28,6 +29,10 @@ class 窗口_更新软件(QDialog):
         self.ui.pushButton_ok.hide()
         self.ui.pushButton_azgx.setEnabled(False)
         self.ui.pushButton_tgbb.setEnabled(False)
+        # textEdit 禁止编辑
+        self.ui.textEdit.setReadOnly(True)
+        self.ui.textEdit.setText("正在检查更新...")
+
 
         self.应用名称 = 应用名称
         self.当前版本号 = 当前版本号
