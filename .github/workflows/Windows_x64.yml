@@ -19,8 +19,6 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     environment: build
-    permissions:
-      contents: write
     strategy:
       matrix:
         os: [windows-2022]
@@ -29,23 +27,16 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
-    - name: Set up Python 3.9.13
-      uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4
       with:
-        #要使用的Python版本的版本范围或确切版本，使用SemVer的版本范围语法
-        python-version: "3.9.13"
-        #可选x64或x86。如果未指定，默认值为x64
+        python-version: '3.9'
         architecture: "x64"
-
+        cache: 'pip'
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
     - name: Build
       run: |
-        # 获取当前的版本号
-        version=$(git describe --tags --always)
-        # window 系统 将版本号写入 version.py 文件
-        echo "version = '$version'" > version.py
         pyinstaller --onefile --windowed --icon "QtEsayDesigner.icns" "my_app.py"
     #- name: Create Zip Package # 创建压缩包
     #  run: |
