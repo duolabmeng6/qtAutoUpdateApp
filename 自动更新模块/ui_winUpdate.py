@@ -18,14 +18,37 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
     QProgressBar, QPushButton, QSizePolicy, QSpacerItem,
     QTextEdit, QVBoxLayout, QWidget)
+import update_image_rc
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(480, 300)
+        Form.resize(510, 301)
         self.horizontalLayout_2 = QHBoxLayout(Form)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.label = QLabel(Form)
+        self.label.setObjectName(u"label")
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setMaximumSize(QSize(65, 64))
+        self.label.setPixmap(QPixmap(u":/images/icon_128x128.png"))
+        self.label.setScaledContents(True)
+
+        self.verticalLayout_2.addWidget(self.label)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
+
+
+        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
+
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label_2 = QLabel(Form)
@@ -115,6 +138,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"\u8f6f\u4ef6\u66f4\u65b0", None))
+        self.label.setText("")
         self.label_2.setText(QCoreApplication.translate("Form", u"\u53d1\u73b0\u65b0\u7248\u672c", None))
         self.label_bbh.setText(QCoreApplication.translate("Form", u"\u6700\u65b0\u7248\u672c:2.0 \u5f53\u524d\u7248\u672c:1.0", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"\u7248\u672c\u63cf\u8ff0", None))
