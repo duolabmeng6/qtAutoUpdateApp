@@ -13,28 +13,34 @@ on:
   workflow_dispatch:
 
 
-permissions: read-all|write-all
-
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     environment: build
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [windows-2022]
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          architecture: "x64"
-          cache: 'pip'
-      - run: |
-          pip install -r requirements.txt
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Set up Python 3.9.13
+      uses: actions/setup-python@v3
+      with:
+        #要使用的Python版本的版本范围或确切版本，使用SemVer的版本范围语法
+        python-version: "3.9.13"
+        #可选x64或x86。如果未指定，默认值为x64
+        architecture: "x64"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
     - name: Build
       run: |
         # 获取当前的版本号
@@ -42,6 +48,9 @@ jobs:
         # window 系统 将版本号写入 version.py 文件
         echo "version = '$version'" > version.py
         pyinstaller --onefile --windowed --icon "QtEsayDesigner.icns" "my_app.py"
+    #- name: Create Zip Package # 创建压缩包
+    #  run: |
+    #    zip -r ./dist/MacOS_ARM64.zip ./dist/app
     - name: Upload Artifact # 上传构建产物，这里我们的源码目录是根目录，而实际运行的代码是构建后的 dist 目录
       uses: actions/upload-artifact@v3
       with:
@@ -52,7 +61,6 @@ jobs:
       with:
         allowUpdates: true
 #        tag: "latest"
-        bodyFile: ./版本描述.md
         artifacts: "dist/*.exe"
         token: ${{ secrets.GITHUB_TOKEN }}
 
