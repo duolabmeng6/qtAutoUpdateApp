@@ -1,7 +1,5 @@
 # pyqt 软件自动更新框架的程序演示
 
-
-
 提供通用易于配置的 python 应用自动更新程序框架
 
 适用于 pyinstaller 应用的自动更新 支持 pyqt 的应用 或者其他python应用使用
@@ -90,6 +88,75 @@
 
 * run_output_version.py
 * version.py
+
+# 使用
+
+## 1 作为子模块使用
+
+```shell
+git submodule add https://github.com/duolabmeng6/qtAutoUpdateApp qtAutoUpdateApp
+```
+
+当然直接下载本项目也是可以的
+
+```python
+import qtAutoUpdateApp.自动更新模块 as 自动更新模块
+import version
+全局变量_版本号 = version.version
+全局_项目名称 = "duolabmeng6/QtEasyDesigner"
+全局_应用名称 = "QtEasyDesigner.app"
+全局_当前版本 = version.version
+全局_官方网址 = "https://github.com/duolabmeng6/QtEasyDesigner"
+```
+
+## 2 检查更新的回调
+
+```python
+
+    def 检查更新回到回调函数(self, 数据):
+        # print("数据", 数据)
+        最新版本号 = 数据['版本号']
+        发布时间 = 数据['发布时间']
+        发布时间 = 到时间(发布时间).取日期()
+        try:
+            最新版本 = f"最新版更新于:{发布时间}({最新版本号})"
+        except:
+            pass
+            最新版本 = "查询失败"
+        self.状态条标签.setText(f"欢迎使用 Qt视窗设计器(QtEasyDesigner) 当前版本:{全局变量_版本号} {最新版本}")
+
+    def 更新版本号(self):
+        self.检查更新线程 = 自动更新模块.检查更新线程(全局_项目名称, self.检查更新回到回调函数)
+        self.检查更新线程.start()
+```
+
+## 3 弹出软件更新窗口
+
+
+```shell
+        if self.winUpdate is None:
+            self.winUpdate = 自动更新模块.窗口_更新软件(Github项目名称=全局_项目名称,
+                                            应用名称=全局_应用名称,
+                                            当前版本号=全局_当前版本,
+                                            官方网址=全局_官方网址)
+        self.winUpdate.show()
+```
+
+## 4 程序入口加入代码
+
+自动化检测是否能够运行和一些启动时的处理
+
+```shell
+if __name__ == '__main__':
+    自动更新模块.初始化()
+
+```
+
+
+
+## 以上4个步骤就是在代码中的流程
+
+还需要配置github自动构建的脚本请自行修改~
 
 
 
