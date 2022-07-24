@@ -9,6 +9,7 @@ import 自动更新模块
 全局_项目名称 = "duolabmeng6/qtAutoUpdateApp"
 全局_应用名称 = "my_app.app"
 全局_当前版本 = version.version
+全局_官方网址 = "https://github.com/duolabmeng6/qtAutoUpdateApp"
 
 
 class Main(QMainWindow):
@@ -18,7 +19,10 @@ class Main(QMainWindow):
 
     def 按钮_检查更新点击(self):
         # 弹出窗口
-        self.winUpdate = 自动更新模块.窗口_更新软件(Github项目名称=全局_项目名称, 应用名称=全局_应用名称, 当前版本号=全局_当前版本)
+        self.winUpdate = 自动更新模块.窗口_更新软件(Github项目名称=全局_项目名称,
+                                        应用名称=全局_应用名称,
+                                        当前版本号=全局_当前版本,
+                                        官方网址=全局_官方网址)
         self.winUpdate.show()
 
     def init_ui(self):
@@ -68,7 +72,6 @@ class Main(QMainWindow):
 
 
 if __name__ == '__main__':
-
     自动更新模块.初始化()
 
     app = QApplication(sys.argv)
