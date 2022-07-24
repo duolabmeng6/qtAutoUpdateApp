@@ -5,12 +5,11 @@ import shutil
 import sys
 
 from PySide6 import QtCore
-from PySide6.QtCore import *
-from PySide6.QtWidgets import *
+from PySide6.QtCore import QThread
 
-from 自动更新模块.压缩包文件处理 import zip解压2
-from 自动更新模块.文件下载模块 import 下载文件
-from 自动更新模块.自动更新读取版本模块 import 获取最新版本号和下载地址
+from .压缩包文件处理 import zip解压2
+from .文件下载模块 import 下载文件
+from .自动更新读取版本模块 import 获取最新版本号和下载地址
 
 
 def 系统_是否为window系统():
