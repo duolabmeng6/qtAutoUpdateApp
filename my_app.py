@@ -74,6 +74,7 @@ if __name__ == '__main__':
         if 参数1 == "test":
             print("app run success")
             sys.exit(0)
+    自动更新模块.检查文件是否存在_存在则删除()
 
     app = QApplication(sys.argv)
     win = Main()

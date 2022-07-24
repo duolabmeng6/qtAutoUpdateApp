@@ -2,7 +2,7 @@ import os
 
 from PySide6.QtWidgets import QDialog
 
-from 自动更新模块 import 下载文件线程类, 系统_是否为window系统, 系统_是否为mac系统, 更新自己Window应用, 检查更新线程, 更新自己MacOS应用, ui_winUpdate
+from 自动更新模块 import 下载文件线程类, 系统_是否为window系统, 系统_是否为mac系统, 更新自己Window应用, 检查更新线程, 更新自己MacOS应用, ui_winUpdate, 检查文件是否存在_存在则删除
 
 import 自动更新模块.update_image_rc
 
