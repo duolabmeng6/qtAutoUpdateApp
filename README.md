@@ -38,14 +38,15 @@
 
 
 
+# 已在 Qt Easy Designer 中使用
+
+![image-20220724092930449](images/README/image-20220724092930449.png)
+
+![image-20220724092918002](images/README/image-20220724092918002.png)
 
 ![image-20220724061909904](images/README/image-20220724061909904.png)
 
 ![image-20220724035028662](README.assets/image-20220724035028662.png)
-
-![image-20220724035038488](README.assets/image-20220724035038488.png)
-
-![image-20220724035103848](README.assets/image-20220724035103848.png)
 
 
 
@@ -243,9 +244,9 @@ Sparkle 需要使用 xcode 进行版本管理 十分麻烦当然也可以使用
 
 # 项目推荐
 
-## Qt Esay Designer 由本人开发的开源 qt 界面设计器
+## Qt Easy Designer 由本人开发的开源 qt 界面设计器
 
-https://github.com/duolabmeng6/QtEsayDesigner 
+https://github.com/duolabmeng6/QtEsayDesigner
 
 ## pyefun python 中文功能函数库
 
