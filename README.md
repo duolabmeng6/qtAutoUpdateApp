@@ -160,6 +160,10 @@ if __name__ == '__main__':
 
 ## 
 
+# 配置仓库
+
+
+
 ## 配置文件 自动化编译脚本
 
 文件位于 .github/workflows/发布软件.yml
@@ -398,6 +402,10 @@ https://github.com/duolabmeng6/learn_actions/issues/labels
 ![image-20220727234933101](images/README/image-20220727234933101.png)
 
 
+
+pull  打标签
+
+![image-20220727235347546](images/README/image-20220727235347546.png)
 
 
 
