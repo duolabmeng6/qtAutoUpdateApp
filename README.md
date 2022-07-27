@@ -61,14 +61,12 @@
 │  app.icns 					macos 应用图标
 │  app.ico  					window 应用图标
 │  requirements.txt
-│  run_output_version.py		构建时写出的版本号文件的脚本
+│  run_write_version.py		构建时写出的版本号文件的脚本
 │  version.py					版本号文件 这个文件构建会被覆盖无需修改
 │  版本描述.md					 发布应用的描述内容
 ├─.github
 │  └─workflows
-│          auto_tag.yml			自动构建tags版本号 
-│          macos_x64.yml		自动构建macos应用
-│          Windows_x64.yml		自动构建pc应用
+│          发布软件.yml			自动构建版本号 编译window软件和macos软件 自动发布 
 └─自动更新模块
     │  ui_winUpdate.py			ui界面文件
     │  winUpdate.ui				qt designer 设计文件
@@ -86,7 +84,7 @@
 * 自动更新模块/
 * .github/
 
-* run_output_version.py
+* run_write_version
 * version.py
 
 # 使用
@@ -152,108 +150,252 @@ if __name__ == '__main__':
 
 ```
 
+给自动化流程 测试软件是否能打开的
+
 
 
 ## 以上4个步骤就是在代码中的流程
 
 还需要配置github自动构建的脚本请自行修改~
 
+## 
 
+## 配置文件 自动化编译脚本
 
-# 注意
+文件位于 .github/workflows/发布软件.yml
 
-## 1 自动构建运行测试
+### 1 构建版本号和变更信息
 
-用于检测程序是否成功构建 避免自动更新后软件无法打开 用户需要重新下载的情况
-
-
-
-入口函数加入以下代码
-
-```
-if __name__ == '__main__':
-    传入参数 = sys.argv
-    if len(传入参数) == 2:
-        参数1 = 传入参数[1]
-        if 参数1 == "test":
-            print("app run success")
-            sys.exit(0)
-```
-
-
-
-## 2 提交代码时自动构建版本号
-
-如果你不想全自动构建 你可以自己触发工作流  下面的内容不用看了
-
-
-
-```
-.github/workflows/auto_tag.yml
-```
-
-注意
-
-```
-token: ${{ secrets.LONGLONG }} # 需要用自己的秘钥
-```
-
-
-
-在这里设置  https://github.com/settings/tokens
-
-权限给 repo 和  project 就可以
-
-
-
-得到秘钥以后在 `https://github.com/duolabmeng6/qtAutoUpdateApp/settings/secrets/actions`
-
-配置秘钥环境变量 LONGLONG 填写为前面生成的 token 即可
-
-
-
-## 3 自动构建软件脚本
-
-```
-.github\workflows\macos_x64.yml
-
-.github\workflows\Windows_x64.yml
-```
-
-
-
-为了在 window 和 macos 中得到将最新版本写入
-
-window写入版本号
-
-```
-    - name: Build
-      run: |
-        python run_output_version.py
-        pyinstaller --noconfirm --onefile --windowed --icon "app.ico" "my_app.py"
-```
-
-由于 window的脚本我不会写 所以我用了python写入版本号
-
-mac写入版本号
-
-```
-      - name: Build application
+```yaml
+  jobs_v:
+    name: 构建版本号和变更信息
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.create_version.outputs.tag_name }} # 版本号
+      body: ${{ steps.create_version.outputs.body }} # 版本变更内容
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        id: create_version
+        with:
+          config-name: release-drafter.yml # 配置文件在 .github/release-drafter.yml
+          disable-autolabeler: true # 禁止自动标签
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 查看变量
         run: |
-          rm -rf build
-          rm -rf dist
-          # 获取当前的版本号
-          version=$(git describe --tags --always)
-          # 将版本号写入 version.py 文件
-          echo "version = '$version'" > version.py
-          pyinstaller my_app_macos.spec
+          echo ${{ format('version={0}', steps.create_version.outputs.tag_name ) }} 
+
 ```
 
-由于mac的命令行简单些所以就用不着python 
+这里注意 输出的变量 version 和 body 是版本号和发布的内容
 
-以上操作均可使用 python run_output_version.py
+#### 发布的内容
+
+文件位于 .github/release-drafter.yml
+
+```
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🚀 新功能'
+    labels:
+      - '新功能'
+  - title: '🐛 Bug 修复'
+    labels:
+      - 'bug'
+  - title: '🧰 日常维护'
+    label: '日常维护'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+template: |
+  # 自动更新程序
+  * 更新了自动构建
+  * 自动获取版本
+  * 自动下载
+  * 自动替换
+
+  $CHANGES
+no-changes-template: |
+  快下载体验~
+
+```
+
+注意这里的 labels 是需要 pull 打标签才会生成的
+
+template 为发布的内容 其中 `$CHANGES` 是版本之间的变更 也是通过 pull 才会显示的
+
+##### pull 打标签
+
+![image-20220727234218324](images/README/image-20220727234218324.png)
+
+##### 发布版本时就会显示
+
+![image-20220727234345559](images/README/image-20220727234345559.png)
+
+##### 标签的配置
+
+https://github.com/duolabmeng6/learn_actions/issues/labels
+
+注意一点 描述的内容必须删除 否则构建时会报错 版本变更将无法生产 删除即正常
+
+![image-20220727234457303](images/README/image-20220727234457303.png)
+
+### 2 构建window软件
+
+```yaml
+
+  jobs_window:
+    needs: jobs_v
+    name: 构建window软件
+    runs-on: windows-2022
+    env:
+      version: ${{ needs.jobs_v.outputs.version }}
+      body: ${{ needs.jobs_v.outputs.body }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: 读入环境信息
+        run: |
+          echo ${{ format('version {0}', env.version ) }} # 版本号
+      - name: 编译环境设置 Python 3.9.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.13"
+          architecture: "x64"
+          cache: 'pip'
+      - name: 下载依赖文件
+        run: pip install -r requirements.txt
+      - name: 编译exe
+        run: |
+          python run_write_version.py
+          pyinstaller --noconfirm --onefile --windowed --icon "app.ico" "my_app.py"
+      - name: 测试运行情况
+        uses: GuillaumeFalourd/assert-command-line-output@v2
+        with:
+          command_line: ./dist/my_app.exe test
+          contains: app run success
+          expected_result: PASSED
+      - name: 上传产物
+        uses: actions/upload-artifact@v3
+        with:
+          name: window
+          path: ./dist/*.exe
+```
 
 
+
+### 3 构建macos软件
+
+
+
+```yaml
+
+  jobs_macos:
+    needs: jobs_v
+    name: 构建macos软件
+    runs-on: macos-12
+    env:
+      version: ${{ needs.jobs_v.outputs.version }}
+      body: ${{ needs.jobs_v.outputs.body }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: 读入环境信息
+        run: |
+          echo ${{ format('version {0}', env.version ) }}
+      - name: 编译环境设置 Python 3.9.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.13"
+          architecture: "x64"
+          cache: 'pip'
+      - name: 下载依赖文件
+        run: pip install -r requirements.txt
+      - name: 编译 MacOS.app
+        run: |
+          python run_write_version.py
+          pyinstaller my_app_macos.spec
+      - name: 测试运行情况
+        uses: GuillaumeFalourd/assert-command-line-output@v2
+        with:
+          command_line: ./dist/my_app.app/Contents/MacOS/my_app test
+          contains: app run success
+          expected_result: PASSED
+      - name: 创建压缩包
+        run: |
+          cd ./dist
+          zip -r ./my_app_MacOS.zip ./my_app.app
+      - name: 上传产物
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: ./dist/*.zip
+
+```
+
+### 4 发布版本
+
+```yaml
+
+  jobs4:
+    needs: [ jobs_v,jobs_window,jobs_macos ]
+    name: 发布版本
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.jobs_v.outputs.version }}
+      body: ${{ needs.jobs_v.outputs.body }}
+    steps:
+      - name: 下载产物
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+      - name: 读入环境信息
+        run: |
+          echo ${{ format('version {0}', env.version ) }}
+          echo ${{steps.download.outputs.download-path}}
+          ls -R
+
+      - name: 发布文件
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true # 覆盖文件
+          #draft: true # 草稿 自己可见 版本号会保持一样 默认是自动发布 latest
+          #prerelease: true # 预发布 别人可以看到 版本号会继续加
+          tag: ${{ env.version }} # 版本号 v0.1.0
+          body: ${{ env.body }} # 输出的内容
+          artifacts: "window/*.exe,macos/*.zip"
+```
+
+
+
+# 最后效果
+
+![image-20220727234826096](images/README/image-20220727234826096.png)
+
+
+
+
+
+![image-20220727234856303](images/README/image-20220727234856303.png)
+
+
+
+![image-20220727234933101](images/README/image-20220727234933101.png)
 
 
 
