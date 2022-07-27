@@ -1,16 +1,16 @@
 name: 发布软件
 
 on:
-   push:
-     branches:
-       - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions: write-all
 
 jobs:
   jobs_v:
-    name : 构建版本号和变更信息
+    name: 构建版本号和变更信息
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.create_version.outputs.tag_name }} # 版本号
@@ -109,7 +109,7 @@ jobs:
 
 
   jobs4:
-    needs: [jobs_v,jobs_window,jobs_macos]
+    needs: [ jobs_v,jobs_window,jobs_macos ]
     name: 发布版本
     runs-on: ubuntu-latest
     env:
