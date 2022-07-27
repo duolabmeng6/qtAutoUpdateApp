@@ -84,7 +84,7 @@ def 初始化():
     # 如果在window系统中存在旧的文件则自动删除
     自身路径Window = 取自身路径Window()
     if 自身路径Window == "":
-        print("非Window编译环境")
+        # print("非Window编译环境")
         return False, ""
     # 检查文件是否存在
     旧的文件名 = 自身路径Window + ".old.bak"
@@ -185,7 +185,8 @@ class 检查更新线程(QThread):
         self.数据 = data
 
     def ui_开始(self):
-        print("开始检查更新")
+        pass
+        # print("开始检查更新")
 
     def ui_结束(self):
         # data = json.dumps(self.数据, indent=4, ensure_ascii=False)

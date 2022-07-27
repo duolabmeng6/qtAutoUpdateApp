@@ -3,8 +3,8 @@ name: auto_tag
 
 # 控制工作流何时运行
 on:
-  push:
-    branches: [ main ]
+#  push:
+#    branches: [ main ]
   workflow_dispatch:
 
 #权限
