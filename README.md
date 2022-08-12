@@ -10,6 +10,8 @@
 
 [查看自动更新的效果](https://user-images.githubusercontent.com/59047063/180640714-bc7fd160-3cb3-4b2a-af2c-8c73c7800740.mp4)
 
+GithubActions 项目发布最佳实践 https://www.bilibili.com/video/BV1Ud4y1K7rv
+
 # 前言
 
 由于搜遍了全网都没有找到一个能用的且方便的 python 软件自动更新的解决方案 
