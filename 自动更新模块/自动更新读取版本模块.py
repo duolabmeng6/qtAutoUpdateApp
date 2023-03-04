@@ -105,6 +105,11 @@ def 解析网页信息(网页):
     发布时间 = 网页.find('<relative-time datetime="')
     发布时间 = 网页[发布时间 + len('<relative-time datetime="'):]
     发布时间 = 发布时间[:发布时间.find('" class="no-wrap">')]
+    # 版本号大于20个字符就清空
+    if len(版本号) > 20:
+        版本号 = ""
+        发布时间 = ""
+        更新内容 = ""
 
     return {
         "版本号": 版本号,
@@ -118,7 +123,9 @@ def 解析网页信息(网页):
 
 # 测试
 if __name__ == '__main__':
-    data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
+    data = 获取最新版本号和下载地址("duolabmeng6/qoq")
     print(data)
     # data = 解析网页信息("")
     # print(data)
+    data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
+    print(data)
