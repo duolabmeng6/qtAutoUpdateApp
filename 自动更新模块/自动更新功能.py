@@ -88,7 +88,7 @@ def 初始化():
         if 参数1 == "test":
             print("app run success")
             # 写出文件
-            with open(_取运行目录() + "test.txt", "w") as f:
+            with open(_取运行目录() + "/test.txt", "w") as f:
                 f.write("app run success")
             sys.exit(0)
 
