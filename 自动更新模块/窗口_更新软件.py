@@ -61,7 +61,7 @@ class 窗口_更新软件(QDialog):
         self.mac下载地址 = 数据['mac下载地址']
         self.win下载地址 = 数据['win下载地址']
 
-        if 最新版本 == self.当前版本号:
+        if 最新版本 == self.当前版本号 or 最新版本 == "":
             self.ui.label_2.setText("你使用的是最新版本")
             self.ui.pushButton_azgx.hide()
             self.ui.pushButton_tgbb.hide()
