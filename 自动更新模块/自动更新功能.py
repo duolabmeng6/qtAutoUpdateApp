@@ -72,6 +72,14 @@ def 更新自己MacOS应用(资源压缩包, 应用名称="my_app.app"):
         return False, ""
 
 
+def _取运行目录():
+    """ PyInstaller 单文件的运行目录  """
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(os.path.realpath(sys.argv[0]))
+    else:
+        return sys.path[0]
+
+
 def 初始化():
     # 构建时测试运行是否正常的
     传入参数 = sys.argv
@@ -79,6 +87,9 @@ def 初始化():
         参数1 = 传入参数[1]
         if 参数1 == "test":
             print("app run success")
+            # 写出文件
+            with open(_取运行目录() + "test.txt", "w") as f:
+                f.write("app run success")
             sys.exit(0)
 
     # 如果在window系统中存在旧的文件则自动删除
