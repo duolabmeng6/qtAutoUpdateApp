@@ -44,12 +44,23 @@ def 获取最新版本号和下载地址(project_name):
     # 通过访问最新的页面 获取版本号和下载地址和更新内容
     # https://github.com/duolabmeng6/qtAutoUpdateApp/releases/latest
     # 镜像地址也可以自己造一个 https://quiet-boat-a038.duolabmeng.workers.dev/
+    #https://github.com/duolabmeng6/qoq/releases/expanded_assets/v0.1.5
     url = f"https://ghproxy.com/https://github.com/{project_name}/releases/latest"
     jsondata = requests.get(url)
-    return 解析网页信息(jsondata.text)
 
 
-def 解析网页信息(网页):
+    # 写出文件
+    # with open('test.html', "w", encoding="utf-8") as f:
+    #     f.write(jsondata.text)
+    # 获取版本号
+
+
+
+    return 解析网页信息(jsondata.text,project_name)
+
+
+def 解析网页信息(网页,project_name):
+
     # 读取文件 test.html
     # with open('test.html', "r", encoding="utf-8") as f:
     #     网页 = f.read()
@@ -70,6 +81,7 @@ def 解析网页信息(网页):
     # <li>自动替换</li>
     # </ul></div>
     # </div>
+
     更新内容 = 网页.find(
         '<div data-pjax="true" data-test-selector="body-content" data-view-component="true" class="markdown-body my-3">')
     更新内容 = 网页[更新内容 + len(
@@ -85,26 +97,37 @@ def 解析网页信息(网页):
     下载地址列表 = []
     mac下载地址 = ""
     win下载地址 = ""
-    pattern = re.compile(r'a href="(.*?)" rel="nofollow" data-skip-pjax>[\s\S].*>(.*?)</span>')
-    result = pattern.findall(网页)
+    # 重新重新访问页面
+    # https://github.com/duolabmeng6/qoq/releases/expanded_assets/v0.1.5
+    url = f"https://ghproxy.com/https://github.com/{project_name}/releases/expanded_assets/{版本号}"
+    网页2 = requests.get(url).text
+
+    pattern = re.compile( r'class="Truncate-text text-bold">(.*?)</span>' )
+    result = pattern.findall(网页2)
     # print(result)
     for item in result:
-        下载地址 = item[0]
-        下载地址 = f"https://ghproxy.com/https://github.com{下载地址}"
-        文件名 = item[1]
+        # print(item)
+        下载地址 = item
+        下载地址 = f"https://ghproxy.com/https://github.com/{project_name}/releases/download/{版本号}/{下载地址}"
+        文件名 = item
+        if 文件名.find('Source code') != -1:
+            continue
+
         下载地址列表.append({文件名: 下载地址})
 
         if 文件名.find('MacOS.zip') != -1:
             mac下载地址 = 下载地址
         if 文件名.find('.exe') != -1:
             win下载地址 = 下载地址
+
+
     # print(下载地址列表)
 
     # 获取发布时间
     # <relative-time datetime="2022-07-22T17:32:41Z" class="no-wrap"></relative-time>
-    发布时间 = 网页.find('<relative-time datetime="')
-    发布时间 = 网页[发布时间 + len('<relative-time datetime="'):]
-    发布时间 = 发布时间[:发布时间.find('" class="no-wrap">')]
+    发布时间 = 网页2.find('<relative-time datetime="')
+    发布时间 = 网页2[发布时间 + len('<relative-time datetime="'):]
+    发布时间 = 发布时间[:发布时间.find('"')]
     # 版本号大于20个字符就清空
     if len(版本号) > 20:
         版本号 = ""
@@ -127,5 +150,5 @@ if __name__ == '__main__':
     print(data)
     # data = 解析网页信息("")
     # print(data)
-    data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
-    print(data)
+    # data = 获取最新版本号和下载地址("duolabmeng6/qtAutoUpdateApp")
+    # print(data)
