@@ -46,6 +46,7 @@ def 获取最新版本号和下载地址(project_name):
     # 镜像地址也可以自己造一个 https://quiet-boat-a038.duolabmeng.workers.dev/
     #https://github.com/duolabmeng6/qoq/releases/expanded_assets/v0.1.5
     url = f"https://ghproxy.com/https://github.com/{project_name}/releases/latest"
+    # print(url)
     jsondata = requests.get(url)
 
 
@@ -60,17 +61,9 @@ def 获取最新版本号和下载地址(project_name):
 
 
 def 解析网页信息(网页,project_name):
-
-    # 读取文件 test.html
-    # with open('test.html', "r", encoding="utf-8") as f:
-    #     网页 = f.read()
-    # print(网页)
-
-    # <h1 data-view-component="true" class="d-inline mr-3">0.0.4</h1>
-    # 获取版本号
-    版本号 = 网页.find('<h1 data-view-component="true" class="d-inline mr-3">')
-    版本号 = 网页[版本号 + len('<h1 data-view-component="true" class="d-inline mr-3">'):]
-    版本号 = 版本号[:版本号.find('</h1>')]
+    版本号 = 网页.find('<span class="ml-1">')
+    版本号 = 网页[版本号 + len('<span class="ml-1">'):]
+    版本号 = 版本号[:版本号.find('</span>')].strip()
     # print(版本号)
     # 获取更新内容
     # <div data-pjax="true" data-test-selector="body-content" data-view-component="true" class="markdown-body my-3"><h1>自动更新程序</h1>
@@ -128,6 +121,9 @@ def 解析网页信息(网页,project_name):
     发布时间 = 网页2.find('<relative-time datetime="')
     发布时间 = 网页2[发布时间 + len('<relative-time datetime="'):]
     发布时间 = 发布时间[:发布时间.find('"')]
+    # 去掉 t z
+    发布时间 = 发布时间.replace("T", " ").replace("Z", "")
+
     # 版本号大于20个字符就清空
     if len(版本号) > 20:
         版本号 = ""
@@ -146,7 +142,7 @@ def 解析网页信息(网页,project_name):
 
 # 测试
 if __name__ == '__main__':
-    data = 获取最新版本号和下载地址("duolabmeng6/qoq")
+    data = 获取最新版本号和下载地址("duolabmeng6/qoq2")
     print(data)
     # data = 解析网页信息("")
     # print(data)
