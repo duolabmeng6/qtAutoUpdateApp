@@ -10,8 +10,10 @@ from . import ui_winUpdate
 
 
 class 窗口_更新软件(QDialog):
+    允许关闭 = False
 
-    def __init__(self, Github项目名称="duolabmeng6/qtAutoUpdateApp", 应用名称="my_app.app", 当前版本号="1.0" , 官方网址= "https://github.com/duolabmeng6/qtAutoUpdateApp"):
+    def __init__(self, Github项目名称="duolabmeng6/qtAutoUpdateApp", 应用名称="my_app.app", 当前版本号="1.0",
+                 官方网址="https://github.com/duolabmeng6/qtAutoUpdateApp"):
         super(窗口_更新软件, self).__init__()
         self.ui = ui_winUpdate.Ui_Form()
         self.ui.setupUi(self)
@@ -36,7 +38,6 @@ class 窗口_更新软件(QDialog):
         self.ui.textEdit.setReadOnly(True)
         self.ui.textEdit.setText("正在检查更新...")
 
-
         self.应用名称 = 应用名称
         self.当前版本号 = 当前版本号
         self.官方网址 = 官方网址
@@ -52,6 +53,12 @@ class 窗口_更新软件(QDialog):
         print('查询最新版本')
         self.检查更新线程 = 检查更新线程(Github项目名称, self.检查更新回到回调函数)
         self.检查更新线程.start()
+
+    def closeEvent(self, event):
+        # self.检查更新线程.quit()
+        self.hide()
+        if self.允许关闭 is False:
+            event.ignore()
 
     def 检查更新回到回调函数(self, 数据):
         print("数据", 数据)
@@ -130,5 +137,5 @@ class 窗口_更新软件(QDialog):
 
     def 打开官方网址(self):
         # 浏览器打开网址
-        print('官方网址',self.官方网址)
+        print('官方网址', self.官方网址)
         webbrowser.open(self.官方网址)
